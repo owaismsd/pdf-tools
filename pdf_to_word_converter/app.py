@@ -1,50 +1,47 @@
-from flask import Flask, request, render_template, send_file
-from pdf2docx import Converter
-from flask_cors import CORS
+from flask import Flask, request, render_template, send_from_directory
 import os
-import uuid
+from pdf2docx import Converter
 
 app = Flask(__name__)
-CORS(app)
-
 UPLOAD_FOLDER = 'uploads'
-OUTPUT_FOLDER = 'converted'
+DOWNLOAD_FOLDER = 'downloads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['OUTPUT_FOLDER'] = OUTPUT_FOLDER
+app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 
+# Ensure folders exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/convert', methods=['POST'])
-def convert():
-    file = request.files['pdf_file']
-    if file and file.filename.endswith('.pdf'):
-        unique_id = str(uuid.uuid4())
-        pdf_filename = unique_id + '.pdf'
-        docx_filename = unique_id + '.docx'
-
-        pdf_path = os.path.join(app.config['UPLOAD_FOLDER'], pdf_filename)
-        docx_path = os.path.join(app.config['OUTPUT_FOLDER'], docx_filename)
-
-        file.save(pdf_path)
-
-        cv = Converter(pdf_path)
-        cv.convert(docx_path, start=0, end=None)
-        cv.close()
-
-        return render_template("download.html", filename=docx_filename)
-    else:
-        return "Only PDF files are allowed."
+@app.route('/', methods=['GET', 'POST'])
+def convert_pdf():
+    if request.method == 'POST':
+        if 'pdf_file' not in request.files:
+            return 'No file uploaded', 400
+        
+        file = request.files['pdf_file']
+        if file.filename == '':
+            return 'No file selected', 400
+        
+        if file and file.filename.endswith('.pdf'):
+            # Save PDF
+            pdf_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+            file.save(pdf_path)
+            
+            # Convert to Word
+            word_filename = file.filename.replace('.pdf', '.docx')
+            word_path = os.path.join(app.config['DOWNLOAD_FOLDER'], word_filename)
+            
+            cv = Converter(pdf_path)
+            cv.convert(word_path)
+            cv.close()
+            
+            return render_template('download.html', filename=word_filename)
+    
+    return 'Invalid request', 400
 
 @app.route('/download/<filename>')
 def download_file(filename):
-    path = os.path.join(app.config['OUTPUT_FOLDER'], filename)
-    return send_file(path, as_attachment=True)
+    return send_from_directory(app.config['DOWNLOAD_FOLDER'], filename, as_attachment=True)
 
 if __name__ == '__main__':
-    # Run locally (ignored on Render)
     app.run(debug=True)
