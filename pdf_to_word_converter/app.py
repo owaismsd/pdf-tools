@@ -1,9 +1,12 @@
-from flask import Flask, request, render_template, send_file, redirect, url_for
+from flask import Flask, request, render_template, send_file
 from pdf2docx import Converter
+from flask_cors import CORS
 import os
 import uuid
 
 app = Flask(__name__)
+CORS(app)
+
 UPLOAD_FOLDER = 'uploads'
 OUTPUT_FOLDER = 'converted'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -43,13 +46,5 @@ def download_file(filename):
     return send_file(path, as_attachment=True)
 
 if __name__ == '__main__':
+    # Run locally (ignored on Render)
     app.run(debug=True)
-
-    from flask_cors import CORS
-
-app = Flask(__name__)
-CORS(app)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=3000)
-
