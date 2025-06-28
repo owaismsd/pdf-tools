@@ -1,0 +1,6 @@
+flask
+pdf2docx
+gunicorn
+flask-cors
+pip freeze > requirements.txt
+
