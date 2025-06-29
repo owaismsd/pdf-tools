@@ -1,10 +1,11 @@
 from flask import Flask, request, send_file
-import os
 from werkzeug.utils import secure_filename
 from pdf2docx import Converter
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
+CORS(app, origins=["https://owaismsd.github.io"])
 
 UPLOAD_FOLDER = "uploads"
 OUTPUT_FOLDER = "converted"
@@ -39,6 +40,3 @@ def convert_pdf_to_word():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-app = Flask(__name__)
-CORS(app)
