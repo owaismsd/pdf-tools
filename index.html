@@ -3,28 +3,249 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PDF to Word Converter</title>
+  <title>PDF Tools - Convert PDF to Word</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 50px;
+      background-color: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .nav-links {
+      display: flex;
+      gap: 25px;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+    .auth-buttons {
+      display: flex;
+      gap: 15px;
+    }
+    .auth-buttons a {
+      text-decoration: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+    }
+    .login {
+      color: #333;
+    }
+    .signup {
+      background-color: #2b7de1;
+      color: white;
+    }
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: white;
+      min-width: 200px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+      border-radius: 5px;
+      padding: 10px 0;
+    }
+    .dropdown-content a {
+      color: #333;
+      padding: 10px 20px;
+      text-decoration: none;
+      display: block;
+    }
+    .dropdown-content a:hover {
+      background-color: #f5f5f5;
+    }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      text-align: center;
+    }
+    h1 {
+      color: #2b7de1;
+      margin-bottom: 30px;
+    }
+    .upload-area {
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      padding: 40px;
+      margin: 30px 0;
+      cursor: pointer;
+    }
+    .upload-area:hover {
+      border-color: #2b7de1;
+    }
+    .convert-btn {
+      background-color: #2b7de1;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 20px 0;
+    }
+    .convert-btn:hover {
+      background-color: #1a6bc8;
+    }
+    .download-btn {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 20px 0;
+      display: none;
+    }
+    .download-btn:hover {
+      background-color: #218838;
+    }
+    .status {
+      margin: 20px 0;
+      min-height: 24px;
+    }
+    .loading {
+      display: none;
+      width: 50px;
+      height: 50px;
+      margin: 20px auto;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #2b7de1;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .tools-section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 40px;
+    }
+    .tool-card {
+      width: 150px;
+      padding: 15px;
+      border-radius: 5px;
+      background-color: #f8f9fa;
+      text-align: center;
+    }
+    .tool-card:hover {
+      background-color: #e9ecef;
+    }
+  </style>
 </head>
 <body>
-
-  <h2>Select PDF and Click Convert</h2>
-  <input type="file" id="fileInput" accept="application/pdf" />
-  <div id="pdf2word">Convert PDF to Word</div>
-  <div id="downloadBtnContainer" style="display: none;">
-    <button id="downloadBtn">Download Word File</button>
+  <div class="navbar">
+    <div class="nav-links">
+      <a href="#">MERGE PDF</a>
+      <a href="#">SPLIT PDF</a>
+      <a href="#">COMPRESS PDF</a>
+      <a href="#">CONVERT PDF</a>
+      <div class="dropdown">
+        <a href="#">ALL PDF TOOLS ▼</a>
+        <div class="dropdown-content">
+          <a href="#">Edit PDF</a>
+          <a href="#">Sign PDF</a>
+          <a href="#">Watermark</a>
+          <a href="#">Rotate PDF</a>
+          <a href="#">Protect PDF</a>
+          <a href="#">Unlock PDF</a>
+          <a href="#">OCR PDF</a>
+        </div>
+      </div>
+    </div>
+    <div class="auth-buttons">
+      <a href="#" class="login">Login</a>
+      <a href="#" class="signup">Sign Up</a>
+    </div>
   </div>
-  <p id="status"></p>
+
+  <div class="container">
+    <h1>Convert PDF to Word</h1>
+    <p>Convert your PDF documents to fully editable Word files with perfect formatting.</p>
+    
+    <div class="upload-area" id="uploadArea">
+      <input type="file" id="fileInput" accept="application/pdf" style="display: none;" />
+      <p>Select PDF file</p>
+      <p>or drop PDF here</p>
+    </div>
+    
+    <button class="convert-btn" id="pdf2word">Convert PDF to Word</button>
+    <button class="download-btn" id="downloadBtn">Download Word File</button>
+    
+    <div class="loading" id="loading"></div>
+    <div class="status" id="status"></div>
+    
+    <div class="tools-section">
+      <div class="tool-card">PDF to Excel</div>
+      <div class="tool-card">PDF to PowerPoint</div>
+      <div class="tool-card">Word to PDF</div>
+      <div class="tool-card">Excel to PDF</div>
+      <div class="tool-card">PowerPoint to PDF</div>
+    </div>
+  </div>
 
   <script>
     const fileInput = document.getElementById("fileInput");
     const status = document.getElementById("status");
-    const div = document.getElementById("pdf2word");
-    const downloadBtnContainer = document.getElementById("downloadBtnContainer");
+    const convertBtn = document.getElementById("pdf2word");
     const downloadBtn = document.getElementById("downloadBtn");
+    const loading = document.getElementById("loading");
+    const uploadArea = document.getElementById("uploadArea");
     
     let downloadUrl = null;
 
-    div.addEventListener("click", async () => {
+    // Make upload area clickable
+    uploadArea.addEventListener("click", () => {
+      fileInput.click();
+    });
+
+    // Handle file selection
+    fileInput.addEventListener("change", () => {
+      if (fileInput.files.length > 0) {
+        uploadArea.innerHTML = `<p>${fileInput.files[0].name}</p>`;
+      }
+    });
+
+    // Handle drag and drop
+    uploadArea.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      uploadArea.style.borderColor = "#2b7de1";
+    });
+
+    uploadArea.addEventListener("dragleave", () => {
+      uploadArea.style.borderColor = "#ccc";
+    });
+
+    uploadArea.addEventListener("drop", (e) => {
+      e.preventDefault();
+      uploadArea.style.borderColor = "#ccc";
+      if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        uploadArea.innerHTML = `<p>${fileInput.files[0].name}</p>`;
+      }
+    });
+
+    convertBtn.addEventListener("click", async () => {
       const file = fileInput.files[0];
       if (!file) {
         status.textContent = "Please select a PDF file.";
@@ -32,7 +253,9 @@
       }
 
       status.textContent = "Converting...";
-      downloadBtnContainer.style.display = "none";
+      downloadBtn.style.display = "none";
+      loading.style.display = "block";
+      convertBtn.disabled = true;
 
       const formData = new FormData();
       formData.append("file", file);
@@ -48,10 +271,13 @@
         const blob = await response.blob();
         downloadUrl = window.URL.createObjectURL(blob);
 
-        downloadBtnContainer.style.display = "block";
-        status.textContent = "Conversion complete! Click Download to get your Word file.";
+        downloadBtn.style.display = "inline-block";
+        status.textContent = "Conversion complete!";
       } catch (error) {
         status.textContent = "Error: " + error.message;
+      } finally {
+        loading.style.display = "none";
+        convertBtn.disabled = false;
       }
     });
 
