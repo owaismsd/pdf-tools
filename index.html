@@ -10,12 +10,19 @@
   <h2>Select PDF and Click Convert</h2>
   <input type="file" id="fileInput" accept="application/pdf" />
   <div id="pdf2word">Convert PDF to Word</div>
+  <div id="downloadBtnContainer" style="display: none;">
+    <button id="downloadBtn">Download Word File</button>
+  </div>
   <p id="status"></p>
 
   <script>
     const fileInput = document.getElementById("fileInput");
     const status = document.getElementById("status");
     const div = document.getElementById("pdf2word");
+    const downloadBtnContainer = document.getElementById("downloadBtnContainer");
+    const downloadBtn = document.getElementById("downloadBtn");
+    
+    let downloadUrl = null;
 
     div.addEventListener("click", async () => {
       const file = fileInput.files[0];
@@ -25,6 +32,7 @@
       }
 
       status.textContent = "Converting...";
+      downloadBtnContainer.style.display = "none";
 
       const formData = new FormData();
       formData.append("file", file);
@@ -38,16 +46,21 @@
         if (!response.ok) throw new Error("Conversion failed");
 
         const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
+        downloadUrl = window.URL.createObjectURL(blob);
 
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "converted.docx";
-        a.click();
-
-        status.textContent = "Conversion complete!";
+        downloadBtnContainer.style.display = "block";
+        status.textContent = "Conversion complete! Click Download to get your Word file.";
       } catch (error) {
         status.textContent = "Error: " + error.message;
+      }
+    });
+
+    downloadBtn.addEventListener("click", () => {
+      if (downloadUrl) {
+        const a = document.createElement("a");
+        a.href = downloadUrl;
+        a.download = "converted.docx";
+        a.click();
       }
     });
   </script>
