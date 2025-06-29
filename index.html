@@ -614,7 +614,7 @@
 
         <div class="tools-grid">
           <!-- Tool Cards -->
-          <div class="tool-card">
+          <div class="tool-card mergepdf">
             <div class="tool-icon">
               <i class="fas fa-object-group"></i>
             </div>
@@ -622,7 +622,7 @@
             <p>Combine multiple PDFs into one unified document</p>
           </div>
 
-          <div class="tool-card">
+          <div class="tool-card splitpdf">
             <div class="tool-icon">
               <i class="fas fa-cut"></i>
             </div>
@@ -927,7 +927,7 @@
 
         <div class="footer-bottom">
           <div class="copyright">
-            &copy; 2023 PDF Tools. All rights reserved.
+            &copy; 2025 PDF Tools. All rights reserved.
           </div>
 
           <div class="social-icons">
@@ -966,6 +966,16 @@
     let pdftoword = document.querySelector(".pdftoword");
     pdftoword.addEventListener("click", function () {
       window.location.href = "pdftoword.html"; // Replace with actual link
+    });
+
+    let mergepdf = document.querySelector(".mergepdf");
+    mergepdf.addEventListener("click", function () {
+      window.location.href = "mergepdf.html"; // Replace with actual link
+    });
+
+    let splitpdf = document.querySelector(".splitpdf");
+    splitpdf.addEventListener("click", function () {
+      window.location.href = "splitpdf.html"; // Replace with actual link
     });
   </script>
 </html>
