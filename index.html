@@ -222,7 +222,6 @@
             font-weight: 500;
             cursor: pointer;
             transition: background-color 0.3s;
-            margin-bottom: 20px;
         }
         
         .convert-btn:hover {
@@ -234,30 +233,12 @@
             cursor: not-allowed;
         }
         
-        .download-btn {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 5px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            display: none;
-            margin-bottom: 20px;
-        }
-        
-        .download-btn:hover {
-            background-color: #218838;
-        }
-        
         /* Loading Animation */
         .loading-container {
             display: none;
             flex-direction: column;
             align-items: center;
-            margin: 20px 0;
+            padding: 60px 0;
         }
         
         .loading-spinner {
@@ -283,6 +264,7 @@
         .result-container {
             display: none;
             text-align: center;
+            padding: 60px 0;
         }
         
         .result-success {
@@ -291,7 +273,23 @@
             margin-bottom: 20px;
         }
         
-        /* Tool Cards */
+        .download-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 30px;
+            transition: background-color 0.3s;
+        }
+        
+        .download-btn:hover {
+            background-color: #e53e5a;
+        }
+        
+        /* Continue Tools Section */
         .continue-title {
             text-align: center;
             color: var(--secondary-color);
@@ -501,7 +499,7 @@
     </header>
     
     <!-- Convert PDF Section -->
-    <section class="convert-section">
+    <section class="convert-section" id="convertSection">
         <div class="container">
             <h1 class="convert-title">Convert PDF to Word</h1>
             <p class="convert-description">Convert your PDF documents to fully editable Word files with perfect formatting.</p>
@@ -515,51 +513,55 @@
             
             <div class="file-info" id="fileInfo">No file selected</div>
             
-            <button class="convert-btn" id="convertBtn" disabled>Convert PDF to Word</button>
-            <button class="download-btn" id="downloadBtn">Download Word File</button>
+            <button class="convert-btn" id="convertBtn" disabled>Convert to Word</button>
+        </div>
+    </section>
+    
+    <!-- Loading Animation -->
+    <section class="loading-container" id="loadingContainer">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Converting your PDF to Word...</p>
+    </section>
+    
+    <!-- Result Section -->
+    <section class="result-container" id="resultContainer">
+        <div class="container">
+            <h2 class="result-success">PDF has been converted to Word!</h2>
+            <a href="#" class="download-btn" id="downloadBtn">Download Word File</a>
             
-            <div class="loading-container" id="loadingContainer">
-                <div class="loading-spinner"></div>
-                <p class="loading-text">Converting your PDF to Word...</p>
+            <h3 class="continue-title">Continue to...</h3>
+            <div class="action-columns">
+                <div class="action-column">
+                    <div class="action-item">
+                        <i class="fas fa-compress-alt"></i>
+                        <button class="action-btn">Compress PDF</button>
+                    </div>
+                    <div class="action-item">
+                        <i class="fas fa-stamp"></i>
+                        <button class="action-btn">Add Watermark</button>
+                    </div>
+                    <div class="action-item">
+                        <i class="fas fa-redo"></i>
+                        <button class="action-btn">Rotate PDF</button>
+                    </div>
+                </div>
+                <div class="action-column">
+                    <div class="action-item">
+                        <i class="fas fa-cut"></i>
+                        <button class="action-btn">Split PDF</button>
+                    </div>
+                    <div class="action-item">
+                        <i class="fas fa-sort-numeric-up"></i>
+                        <button class="action-btn">Add Page Numbers</button>
+                    </div>
+                    <div class="action-item">
+                        <i class="fas fa-lock"></i>
+                        <button class="action-btn">Protect PDF</button>
+                    </div>
+                </div>
             </div>
-            
-            <div class="result-container" id="resultContainer">
-                <h2 class="result-success">PDF has been converted to Word!</h2>
-                
-                <h3 class="continue-title">Continue to...</h3>
-                <div class="action-columns">
-                    <div class="action-column">
-                        <div class="action-item">
-                            <i class="fas fa-compress-alt"></i>
-                            <button class="action-btn">Compress PDF</button>
-                        </div>
-                        <div class="action-item">
-                            <i class="fas fa-stamp"></i>
-                            <button class="action-btn">Add Watermark</button>
-                        </div>
-                        <div class="action-item">
-                            <i class="fas fa-redo"></i>
-                            <button class="action-btn">Rotate PDF</button>
-                        </div>
-                    </div>
-                    <div class="action-column">
-                        <div class="action-item">
-                            <i class="fas fa-cut"></i>
-                            <button class="action-btn">Split PDF</button>
-                        </div>
-                        <div class="action-item">
-                            <i class="fas fa-sort-numeric-up"></i>
-                            <button class="action-btn">Add Page Numbers</button>
-                        </div>
-                        <div class="action-item">
-                            <i class="fas fa-lock"></i>
-                            <button class="action-btn">Protect PDF</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="see-more-container">
-                    <button class="see-more-btn">See more <i class="fas fa-chevron-down"></i></button>
-                </div>
+            <div class="see-more-container">
+                <button class="see-more-btn">See more <i class="fas fa-chevron-down"></i></button>
             </div>
         </div>
     </section>
@@ -570,9 +572,10 @@
         const fileInput = document.getElementById('fileInput');
         const fileInfo = document.getElementById('fileInfo');
         const convertBtn = document.getElementById('convertBtn');
-        const downloadBtn = document.getElementById('downloadBtn');
+        const convertSection = document.getElementById('convertSection');
         const loadingContainer = document.getElementById('loadingContainer');
         const resultContainer = document.getElementById('resultContainer');
+        const downloadBtn = document.getElementById('downloadBtn');
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mainNav = document.getElementById('mainNav');
         
@@ -670,9 +673,9 @@
                 return;
             }
             
-            // Show loading animation
+            // Show loading animation and hide convert section
+            convertSection.style.display = 'none';
             loadingContainer.style.display = 'flex';
-            convertBtn.disabled = true;
             
             try {
                 const formData = new FormData();
@@ -688,15 +691,15 @@
                 const blob = await response.blob();
                 downloadUrl = window.URL.createObjectURL(blob);
                 
-                // Show result and download button
+                // Show result and hide loading
                 loadingContainer.style.display = 'none';
                 resultContainer.style.display = 'block';
-                downloadBtn.style.display = 'inline-block';
                 
             } catch (error) {
                 console.error('Error converting PDF:', error);
+                // Show convert section again on error
                 loadingContainer.style.display = 'none';
-                convertBtn.disabled = false;
+                convertSection.style.display = 'block';
                 alert('Error converting PDF. Please try again with a valid PDF file.');
             }
         }
